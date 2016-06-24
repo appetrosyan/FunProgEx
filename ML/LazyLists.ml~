@@ -1,0 +1,50 @@
+datatype 'a seq = Nil
+		| Cons of 'a * (unit->'a seq);
+
+fun seqFrom i = Cons(i, fn () => seqFrom (i+1));
+
+fun Hd (Cons(x, _ ) ) = x;
+
+fun Tl (Cons(_, f)) = f();
+
+val nat = seqFrom 1;
+
+fun takeSeq (0, _) = []
+  | takeSeq (n, Nil) = []
+  | takeSeq (n, Cons(x, xf)) = x::(takeSeq (n-1, xf()));
+
+fun dropSeq (0, xs) = xs
+  | dropSeq (n, Cons(x,xs)) = dropSeq(n-1, xs());
+
+fun filterSeq p Nil = Nil
+  | filterSeq p (Cons(x, xs)) =
+    if p x then
+	Cons (x, fn() => filterSeq p (xs()))
+    else
+	filterSeq p xs();
+
+val evens = filterSeq (fn n => n mod 2 =0) nat;
+
+exception empty;
+
+fun nth _ Nil = raise empty
+  | nth 0 Cons(x,_) = x
+  | nth n Cons(_, xs) = nth (n-1) xs();
+
+(* The following is a keen demonstration of the Sieve of Eratosthenes*)
+
+(* Will find a sequence of Primes*)
+
+fun sieve Nil = Nil
+  | sieve Cons(x, xs)  =
+    let
+	fun sift a ns = filterSeq (fn () n => n mod a <> 0) ns
+    in
+	Cons(x, fn () => sift x xs)
+    end;
+
+val primes = sieve (seqFrom 2);
+
+
+
+					 

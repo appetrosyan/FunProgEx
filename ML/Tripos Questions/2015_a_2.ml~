@@ -1,0 +1,18 @@
+datatype 'a stream = Null
+	           | Cons of 'a * (unit-> 'a stream);
+exception empty;
+fun head Null = raise empty
+  | head (Cons(a, _)) = a;
+
+fun tail Null = raise empty
+  | tail (Cons(_,f)) = f();
+
+fun constant x = Cons (x, fn () => x);
+fun fromk (k,n) = Cons(k, fn () => fromk (k+n,n));
+val ints = fromk (1,1);
+
+fun streamtolist (Null, _) = []
+  | streamtolist (_, 0) = [] 
+  | streamtolist ((Cons(h,t)), k) = h::streamtolist(t(), k-1);
+
+
