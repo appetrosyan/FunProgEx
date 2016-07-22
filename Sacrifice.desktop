@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Sacrifice
+Exec=wine /home/app/Games/Sacrifice/Sacrifice.exe
+Type=Application
+StartupNotify=true
+Path=/home/app/Games/Sacrifice
+Icon=/home/app/Games/Sacrifice/Sacrifice.png
+
